@@ -2,7 +2,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Scanner;
-
 import static java.lang.System.*;
 
 /**
@@ -15,10 +14,11 @@ public class Register {
     private String userName;
     private String password;
     private String email;
-    private int userId;
-    private int phoneNo;
+    private int userId = 1; //This would ideally be generated in the database
+    private String phoneNo;
     private String passwordToHash = "password";
     private byte[] salt;
+    private User newUser;
 
     public String getfName() {
         return fName;
@@ -76,11 +76,11 @@ public class Register {
         this.userId = userId;
     }
 
-    public int getPhoneNo() {
+    public String getPhoneNo() {
         return phoneNo;
     }
 
-    public void setPhoneNo(int phoneNo) {
+    public void setPhoneNo(String phoneNo) {
         this.phoneNo = phoneNo;
     }
 
@@ -97,7 +97,7 @@ public class Register {
     }
 
 
-    public Register(String fName, String lName, String address, String userName, String password, String email, int userId, int phoneNo) {
+    public Register(String fName, String lName, String address, String userName, String password, String email, int userId, String phoneNo) {
         this.fName = fName;
         this.lName = lName;
         this.address = address;
@@ -108,13 +108,20 @@ public class Register {
         this.phoneNo = phoneNo;
         try {
             this.salt = getSalt();
+            hashPassword();
+            this.newUser = new User(this.fName,this.lName,this.userName,this.password,this.userId); // Return a new user with hashed password for storage
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
     }
-    void katieWillNameMeLater() {
-        String securePassword = get_SHA_256_SecurePassword(passwordToHash, salt);
-        System.out.println(securePassword);
+
+    public User getUser(){
+        return this.newUser;
+    }
+
+    private void hashPassword() {
+        String securePassword = get_SHA_1_SecurePassword(this.password, this.salt);
+        this.password = securePassword;
     }
 
 
@@ -135,23 +142,10 @@ public class Register {
         return generatedPassword;
     }
 
-    private String get_SHA_256_SecurePassword(String passwordToHash, byte[] salt) {
-        MessageDigest md = null;
-        try {
-            md = MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return md.toString();
-    }
-
     private byte[] getSalt() throws NoSuchAlgorithmException {
         return "THUISISTHESALT".getBytes();
     }
 
-    public String toString() {
-        return (userName + "You have sucessfully registered");
-    }
 }
 
 
