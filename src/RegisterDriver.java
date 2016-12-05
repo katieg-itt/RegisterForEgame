@@ -13,9 +13,8 @@ public class RegisterDriver {
         String password = "SuperSecretPassword";
         String phoneNumber = "555 555 555";
         String address = "Tralee";
-        int userId = 1;
 
-        Register newRegister = new Register(firstName, lastName, address, username, password, email, userId, phoneNumber);
+        Register newRegister = new Register(firstName, lastName, address, username, password, email, phoneNumber);
 
         return newRegister.getUser();
     }
